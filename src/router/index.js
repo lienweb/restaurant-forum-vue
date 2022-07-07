@@ -1,24 +1,21 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 import NotFound from '../views/NotFound.vue'
+import SignIn from '../views/SignIn.vue'
 
 Vue.use(VueRouter)
 
 // 由上往下匹配
 const routes = [
   {
-    path: '/',
-    name: 'home',
-    component: HomeView
+    path: '/signin',
+    name: 'sign-in',
+    component: SignIn
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    path: '/signup',
+    name: 'sign-up',
+    component: () => import('../views/SignUp.vue')
   },
   {
     path: '*', // match the rest
