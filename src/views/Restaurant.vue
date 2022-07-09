@@ -1,8 +1,9 @@
 <template>
   <div class="container py-5">
     <!-- 餐廳資訊頁 RestaurantDetail -->
-    <RestaurantDetail :initial-restaurant-detail="restaurant"/>
+    <RestaurantDetail :initial-restaurant-detail="restaurant" />
     <!-- 餐廳評論 RestaurantComments -->
+    <RestaurantComments :restaurantComments="restaurantComments" />
     <!-- 新增評論 CreateComment -->
   </div>
 </template>
@@ -10,6 +11,7 @@
 <script>
 /* eslint-disable */
 import RestaurantDetail from '../components/RestaurantDetail.vue'
+import RestaurantComments from '../components/RestaurantComments.vue'
 
 const dummyData = {
   "restaurant": {
@@ -96,7 +98,8 @@ const dummyData = {
 export default {
   name: 'Restaurant',
   components: { // 註冊才能用
-    RestaurantDetail
+    RestaurantDetail,
+    RestaurantComments
   },
   data() {
     return {

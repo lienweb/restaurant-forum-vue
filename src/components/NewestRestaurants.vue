@@ -24,7 +24,7 @@ small {
 </style>
 
 <script>
-import moment from 'moment'
+import { fromNowFilter } from '../utils/mixins'
 
 export default {
   props: {
@@ -33,12 +33,13 @@ export default {
       required: true
     }
   },
-  filters: {
-    fromNow (datetime) {
-      if (!datetime) return '-'
-      return moment(datetime).fromNow()
-    }
-  }
+  mixins: [fromNowFilter]
+  // filters: {
+  //   fromNow (datetime) {
+  //     if (!datetime) return '-'
+  //     return moment(datetime).fromNow()
+  //   }
+  // }
 }
 
 </script>
