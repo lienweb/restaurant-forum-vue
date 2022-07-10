@@ -1,7 +1,7 @@
 <template>
   <div class="card">
     <div class="card-header">
-      <strong>40</strong> 已評論餐廳
+      <strong>{{ comments.length }}</strong> 已評論餐廳
     </div>
     <div class="card-body">
       <router-link v-for="comment in comments" :key="comment.id"

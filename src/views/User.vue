@@ -1,8 +1,7 @@
 <template>
   <div class="container">
     <!-- user profile card -->
-    <UserProfileCard :user-profile="profile" :follow="isFollowed" @after-follow="afterHandleFollow"
-      :current-user-id="currentUser.id" />
+    <UserProfileCard :user-profile="profile" @after-follow="afterHandleFollow" :current-user="currentUser" />
 
     <div class="row">
       <div class="col-md-4">
@@ -1207,12 +1206,19 @@ const dummyData = {
 }
 
 const dummyUser = {
+  // currentUser: {
+  //   id: 1,
+  //   name: '管理者',
+  //   email: 'root@example.com',
+  //   image: 'https://i.pravatar.cc/300',
+  //   isAdmin: true
+  // },
   currentUser: {
-    id: 1,
-    name: '管理者',
-    email: 'root@example.com',
+    id: 2,
+    name: 'user1',
+    email: 'user1@example.com',
     image: 'https://i.pravatar.cc/300',
-    isAdmin: true
+    isAdmin: false
   },
   isAuthenticated: true
 }
@@ -1236,9 +1242,9 @@ export default {
         comments: [],
         favoritedRestaurants: [],
         followers: [],
-        followings: []
+        followings: [],
+        isFollowed: null,
       },
-      isFollowed: null,
       currentUser: {}
     }
   },
@@ -1256,15 +1262,20 @@ export default {
         comments: Comments,
         favoritedRestaurants: FavoritedRestaurants,
         followers: Followers,
-        followings: Followings
+        followings: Followings,
+        isFollowed
       }
-      this.isFollowed = isFollowed
     },
     fetchCurrentUser() {
       this.currentUser = dummyUser.currentUser
     },
-    afterHandleFollow(followStatus) {
-      this.isFollowed = followStatus
+    afterHandleFollow(payload) {
+      const { followStatus, followers } = payload
+      this.profile = {
+        ...this.profile,
+        followers,
+        isFollowed: followStatus
+      }
     }
   },
   created() {

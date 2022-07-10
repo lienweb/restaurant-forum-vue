@@ -19,10 +19,10 @@
           <p>
           </p>
           <form action="/following" method="POST" style="display: contents;">
-            <button type="button" class="btn btn-primary" v-if="currentUserId === userProfile.id"
+            <button type="button" class="btn btn-primary" v-if="currentUser.id === userProfile.id"
               @click.stop.prevent="handleEdit">Edit</button>
             <button type="submit" class="btn btn-danger" v-else-if="isFollowed"
-              @click.stop.prevent="deleteFollowing">取消追蹤</button>
+              @click.stop.prevent="deleteFollowing(currentUser.id)">取消追蹤</button>
             <button type="submit" class="btn btn-primary" v-else @click.stop.prevent="addFollowing">追蹤</button>
           </form>
           <p></p>
@@ -39,28 +39,31 @@ export default {
       type: Object,
       required: true
     },
-    follow: {
-      type: Boolean,
-      required: true
-    },
-    currentUserId: {
-      type: Number,
+    // follow: {
+    //   type: Boolean,
+    //   required: true
+    // },
+    currentUser: {
+      type: Object,
       required: true
     }
   },
   data () {
     return {
-      isFollowed: this.follow
+      followers: this.userProfile.followers,
+      isFollowed: this.userProfile.isFollowed
     }
   },
   methods: {
     addFollowing () {
       this.isFollowed = true
-      this.$emit('after-follow', this.isFollowed)
+      this.followers.push(this.currentUser)
+      this.$emit('after-follow', { followStatus: this.isFollowed, followers: this.followers })
     },
-    deleteFollowing () {
+    deleteFollowing (userId) {
       this.isFollowed = false
-      this.$emit('after-follow', this.isFollowed)
+      this.followers = this.followers.filter(user => user.id !== userId)
+      this.$emit('after-follow', { followStatus: this.isFollowed, followers: this.followers })
     }
   }
 }
