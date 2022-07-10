@@ -27,47 +27,46 @@
 <script>
 import NavTabs from '../components/NavTabs.vue'
 
-/*eslint-disable */
 const dummyData = {
-  "users": [
+  users: [
     {
-      "id": 1,
-      "name": "root",
-      "email": "root@example.com",
-      "password": "$2a$10$RV9wcGC0JZip8.Hc4GGXYujrS2bcVVHW/094Blsd0tyAnizqc7EhS",
-      "isAdmin": true,
-      "image": null,
-      "createdAt": "2022-07-07T09:45:55.000Z",
-      "updatedAt": "2022-07-07T09:45:55.000Z",
-      "Followers": [],
-      "FollowerCount": 0,
-      "isFollowed": false
+      id: 1,
+      name: 'root',
+      email: 'root@example.com',
+      password: '$2a$10$RV9wcGC0JZip8.Hc4GGXYujrS2bcVVHW/094Blsd0tyAnizqc7EhS',
+      isAdmin: true,
+      image: null,
+      createdAt: '2022-07-07T09:45:55.000Z',
+      updatedAt: '2022-07-07T09:45:55.000Z',
+      Followers: [],
+      FollowerCount: 0,
+      isFollowed: false
     },
     {
-      "id": 2,
-      "name": "user1",
-      "email": "user1@example.com",
-      "password": "$2a$10$SJp6xLGGUfwp4xZyow1x9eZMPicZcccBu7SkC5syFab6J/1HQ7UXS",
-      "isAdmin": false,
-      "image": null,
-      "createdAt": "2022-07-07T09:45:55.000Z",
-      "updatedAt": "2022-07-07T09:45:55.000Z",
-      "Followers": [],
-      "FollowerCount": 0,
-      "isFollowed": false
+      id: 2,
+      name: 'user1',
+      email: 'user1@example.com',
+      password: '$2a$10$SJp6xLGGUfwp4xZyow1x9eZMPicZcccBu7SkC5syFab6J/1HQ7UXS',
+      isAdmin: false,
+      image: null,
+      createdAt: '2022-07-07T09:45:55.000Z',
+      updatedAt: '2022-07-07T09:45:55.000Z',
+      Followers: [],
+      FollowerCount: 0,
+      isFollowed: false
     },
     {
-      "id": 3,
-      "name": "user2",
-      "email": "user2@example.com",
-      "password": "$2a$10$AO.O77pnpFTWGbvBvEK/OOBaAxA93X9AlBk7NZOYyck0IRcooLudm",
-      "isAdmin": false,
-      "image": null,
-      "createdAt": "2022-07-07T09:45:55.000Z",
-      "updatedAt": "2022-07-07T09:45:55.000Z",
-      "Followers": [],
-      "FollowerCount": 0,
-      "isFollowed": false
+      id: 3,
+      name: 'user2',
+      email: 'user2@example.com',
+      password: '$2a$10$AO.O77pnpFTWGbvBvEK/OOBaAxA93X9AlBk7NZOYyck0IRcooLudm',
+      isAdmin: false,
+      image: null,
+      createdAt: '2022-07-07T09:45:55.000Z',
+      updatedAt: '2022-07-07T09:45:55.000Z',
+      Followers: [],
+      FollowerCount: 0,
+      isFollowed: false
     }
   ]
 }
@@ -76,16 +75,16 @@ export default {
   components: {
     NavTabs
   },
-  data() {
+  data () {
     return {
-      users: [],
+      users: []
     }
   },
   methods: {
-    fetchUsers() {
+    fetchUsers () {
       this.users = dummyData.users
     },
-    followUser(userId) {
+    followUser (userId) {
       this.users = this.users.map((user) => {
         if (user.id !== userId) {
           return user
@@ -99,7 +98,7 @@ export default {
         }
       })
     },
-    unfollowUser(userId) {
+    unfollowUser (userId) {
       this.users = this.users.map((user) => {
         if (user.id !== userId) {
           return user
@@ -113,7 +112,7 @@ export default {
       })
     }
   },
-  created() {
+  created () {
     this.fetchUsers()
   }
 }

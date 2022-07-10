@@ -6,7 +6,7 @@
     <div class="card-body">
       <div v-for="comment in comments" :key="comment.id">
         <h4>
-          <router-link :to="{ name: 'restaurant', params: { id: restaurant.id } }">{{ comment.Restaurant.name }}
+          <router-link :to="{ name: 'restaurant', params: { id: comment.Restaurant.id } }">{{ comment.Restaurant.name }}
           </router-link>
         </h4>
         <p>{{ comment.Restaurant.description }}</p>
