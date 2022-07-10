@@ -17,7 +17,7 @@
 
           <template v-if="isAuthenticated">
             <!-- is user is login -->
-            <router-link to="#" class="nav-link text-white mr-3">
+            <router-link :to="{ name: 'user', params: { id: currentUser.id } }" class="nav-link text-white mr-3">
               {{ currentUser.name || '使用者' }} 您好
             </router-link>
             <button type="button" class="btn btn-sm btn-outline-success my-2 my-sm-0">

@@ -54,6 +54,11 @@ const routes = [
     component: () => import('../views/UsersTop.vue')
   },
   {
+    path: '/users/:id',
+    name: 'user',
+    component: () => import('../views/User.vue')
+  },
+  {
     path: '*', // match the rest
     name: 'not-found',
     // route level code-splitting
