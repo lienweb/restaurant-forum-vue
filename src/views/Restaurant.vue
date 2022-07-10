@@ -3,8 +3,9 @@
     <!-- 餐廳資訊頁 RestaurantDetail -->
     <RestaurantDetail :initial-restaurant-detail="restaurant" />
     <!-- 餐廳評論 RestaurantComments -->
-    <RestaurantComments :restaurantComments="restaurantComments" />
+    <RestaurantComments :restaurantComments="restaurantComments" @after-delete-comment="afterDeleteComment" />
     <!-- 新增評論 CreateComment -->
+    <CreateComments :restaurant-id="restaurant.id" @after-create-comment="afterCreateComment" />
   </div>
 </template>
 
@@ -12,6 +13,7 @@
 /* eslint-disable */
 import RestaurantDetail from '../components/RestaurantDetail.vue'
 import RestaurantComments from '../components/RestaurantComments.vue'
+import CreateComments from '../components/CreateComments.vue'
 
 const dummyData = {
   "restaurant": {
@@ -95,11 +97,23 @@ const dummyData = {
   "isLiked": false
 }
 
+const dummyUser = {
+  currentUser: {
+    id: 1,
+    name: '管理者',
+    email: 'root@example.com',
+    image: 'https://i.pravatar.cc/300',
+    isAdmin: true
+  },
+  isAuthenticated: true
+}
+
 export default {
   name: 'Restaurant',
   components: { // 註冊才能用
     RestaurantDetail,
-    RestaurantComments
+    RestaurantComments,
+    CreateComments
   },
   data() {
     return {
@@ -117,6 +131,7 @@ export default {
       },
       restaurantComments: [],
       // id: this.$route.params.id
+      currentUser: dummyUser.currentUser
     }
   },
   methods: {
@@ -159,6 +174,24 @@ export default {
       // }
 
       this.restaurantComments = dummyData.restaurant.Comments
+    },
+    afterDeleteComment(commentId) {
+      this.restaurantComments = this.restaurantComments.filter(comment => comment.id !== commentId)
+    },
+    afterCreateComment(payload) {
+      const { commentId, restaurantId, text } = payload
+
+      this.restaurantComments.push({
+        id: commentId,
+        RestaurantId: restaurantId,
+        User: {
+          id: this.currentUser.id,
+          name: this.currentUser.name
+        },
+        text,
+        createdAt: new Date()
+      })
+      console.log(payload);
     }
   },
   created() {

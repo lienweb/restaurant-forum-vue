@@ -6,7 +6,8 @@
 
     <div v-for="comment in restaurantComments" :key="comment.id">
       <blockquote class="blockquote mb-0">
-        <button type="button" class="btn btn-danger float-end" v-if="currentUser.isAdmin">
+        <button type="button" class="btn btn-danger float-end" v-if="currentUser.isAdmin"
+          @click.stop.prevent="handDeleteButtonClick(comment.id)">
           Delete
         </button>
         <h3>
@@ -14,7 +15,7 @@
         </h3>
         <p>{{ comment.text }}</p>
         <footer class="blockquote-footer">
-          {{ comment.updatedAt | fromNow }}
+          {{ comment.createdAt | fromNow }}
         </footer>
       </blockquote>
       <hr>
@@ -45,16 +46,15 @@ export default {
     }
   },
   mixins: [fromNowFilter],
-  data() {
+  data () {
     return {
       currentUser: dummyUser.currentUser
     }
+  },
+  methods: {
+    handDeleteButtonClick (commentId) {
+      this.$emit('after-delete-comment', commentId)
+    }
   }
-  // filters: {
-  //   fromNow (datetime) {
-  //     if (!datetime.length) return '-'
-  //     return moment(datetime).fromNow()
-  //   }
-  // }
 }
 </script>

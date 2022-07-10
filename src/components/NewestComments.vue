@@ -6,10 +6,11 @@
     <div class="card-body">
       <div v-for="comment in comments" :key="comment.id">
         <h4>
-          <a href="#">{{ comment.Restaurant.name }}</a>
+          <router-link :to="{ name: 'restaurant', params: { id: restaurant.id } }">{{ comment.Restaurant.name }}
+          </router-link>
         </h4>
         <p>{{ comment.Restaurant.description }}</p>
-        <span>by <a href="#">{{ comment.User.name }}</a> at {{ comment.updatedAt | fromNow }}</span>
+        <span>by <a href="#">{{ comment.User.name }}</a> at {{ comment.createdAt | fromNow }}</span>
         <hr>
       </div>
     </div>
@@ -34,12 +35,6 @@ export default {
     }
   },
   mixins: [fromNowFilter]
-  // filters: {
-  //   fromNow (datetime) {
-  //     if (!datetime) return '-'
-  //     return moment(datetime).fromNow()
-  //   }
-  // }
 }
 
 </script>
