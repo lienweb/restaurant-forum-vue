@@ -102,6 +102,36 @@ const dummyData = {
 }
 
 export default {
+  props: {
+    initialRestaurant: {
+      type: Object,
+      // 當資料不是必填時，用 default 設定一組預設值
+      // Object or array defaults must be returned from
+      // a factory function -- see props validation
+      default: () => { // this is functionin js
+        return {
+          name: '',
+          categoryId: -1,
+          tel: '',
+          address: '',
+          description: '',
+          image: '',
+          openingHours: ''
+        }
+      }
+
+      // arrow function: return object literal
+      // default: () => ({  //return object
+      //   name: '',
+      //   categoryId: '',
+      //   tel: '',
+      //   address: '',
+      //   description: '',
+      //   image: '',
+      //   openingHours: '',
+      // })
+    }
+  },
   data () {
     return {
       categories: [],
@@ -120,6 +150,12 @@ export default {
   methods: {
     fetchCategories () {
       this.categories = dummyData.categories
+    },
+    fetchInitialRestaurant () {
+      this.restaurant = {
+        ...this.restaurant,
+        ...this.initialRestaurant
+      }
     },
     handleFileChange (e) {
       const { files } = e.target
@@ -142,6 +178,7 @@ export default {
   },
   created () {
     this.fetchCategories()
+    this.fetchInitialRestaurant()
   }
 }
 </script>

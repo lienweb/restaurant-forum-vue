@@ -1,7 +1,7 @@
 <template>
   <div class="container py-5">
     <!-- 餐廳表單 AdminRestaurantForm -->
-    <AdminRestaurantForm @after-submit="afterSubmit" />
+    <AdminRestaurantForm @after-submit="handleAfterSubmit" />
   </div>
 </template>
 
@@ -13,7 +13,7 @@ export default {
     AdminRestaurantForm
   },
   methods: {
-    afterSubmit (form) {
+    handleAfterSubmit (form) {
       // debug
       for (const [name, value] of form.entries()) {
         console.log(name + ': ' + value)

@@ -59,6 +59,11 @@ const routes = [
     component: () => import('../views/User.vue')
   },
   {
+    path: '/users/:id/edit',
+    name: 'user-edit',
+    component: () => import('../views/UserEdit.vue')
+  },
+  {
     path: '/admin',
     exact: true,
     redirect: '/admin/restaurants'
@@ -77,6 +82,11 @@ const routes = [
     path: '/admin/restaurants/:id',
     name: 'admin-restaurant',
     component: () => import('../views/AdminRestaurant.vue')
+  },
+  {
+    path: '/admin/restaurants/:id/edit',
+    name: 'admin-restaurant-edit',
+    component: () => import('../views/AdminRestaurantEdit.vue')
   },
   {
     path: '*', // match the rest

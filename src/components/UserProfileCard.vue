@@ -19,8 +19,8 @@
           <p>
           </p>
           <form action="/following" method="POST" style="display: contents;">
-            <button type="button" class="btn btn-primary" v-if="currentUser.id === userProfile.id"
-              @click.stop.prevent="handleEdit">Edit</button>
+            <router-link type="button" class="btn btn-primary" v-if="currentUser.id === userProfile.id"
+              :to="{ name: 'user-edit', params: { id: userProfile.id } }">Edit</router-link>
             <button type="submit" class="btn btn-danger" v-else-if="isFollowed"
               @click.stop.prevent="deleteFollowing(currentUser.id)">取消追蹤</button>
             <button type="submit" class="btn btn-primary" v-else @click.stop.prevent="addFollowing">追蹤</button>
