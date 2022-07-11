@@ -11,7 +11,7 @@
       <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
         <div class="navbar-nav">
           <!-- is user is admin -->
-          <router-link to="#" class="nav-link text-white mr-3" v-if="currentUser.isAdmin">
+          <router-link to="/admin" class="nav-link text-white mr-3" v-if="currentUser.isAdmin">
             管理員後台
           </router-link>
 
