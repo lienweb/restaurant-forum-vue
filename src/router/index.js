@@ -94,6 +94,11 @@ const routes = [
     component: () => import('../views/AdminCategories.vue')
   },
   {
+    path: '/admin/users',
+    name: 'admin-users',
+    component: () => import('../views/AdminUsers.vue')
+  },
+  {
     path: '*', // match the rest
     name: 'not-found',
     // route level code-splitting
