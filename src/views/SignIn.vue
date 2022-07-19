@@ -19,7 +19,7 @@
           placeholder="Password" autocomplete="current-password" required>
       </div>
 
-      <button class="btn btn-lg btn-primary btn-block mb-3" type="submit">
+      <button class="btn btn-lg btn-primary w-100 mb-3" type="submit" :disabled="isProcessing">
         Submit
       </button>
 
@@ -44,11 +44,14 @@ export default {
   data () {
     return {
       email: '',
-      password: ''
+      password: '',
+      isProcessing: false
     }
   },
   methods: {
     handleSubmit (e) {
+      this.isProcessing = true
+
       // 向後端伺服器驗證使用者資料
       authorizationAPI.signIn({
         email: this.email,
@@ -58,7 +61,7 @@ export default {
         const { data } = response
 
         // error handling: app層級的
-        if (data.status !== 'success') {
+        if (!this.email || !this.password) {
           Toast.fire({
             icon: 'error',
             title: '未輸入帳號密碼，請重新輸入'
@@ -72,11 +75,15 @@ export default {
 
         // 轉址到landing page
         this.$router.push('/restaurants')
+        // 因為成功登入就會轉址，所以不用還原 isProcessing 的狀態
       }).catch(error => {
-        // http層級錯誤
+        // 代表請求已處理完畢
+        this.isProcessing = false
 
         // 將密碼欄位清空
         this.password = ''
+
+        // http層級錯誤
         // 顯示錯誤提示
         Toast.fire({
           icon: 'error',
@@ -97,5 +104,36 @@ export default {
 }
 </script>
 
-<style lang="scss" src="@/assets/scss/vendors/sweetalert2.scss" scoped>
+<style>
+.colored-toast.swal2-icon-success {
+  background-color: #a5dc86 !important;
+}
+
+.colored-toast.swal2-icon-error {
+  background-color: #f27474 !important;
+}
+
+.colored-toast.swal2-icon-warning {
+  background-color: #f8bb86 !important;
+}
+
+.colored-toast.swal2-icon-info {
+  background-color: #3fc3ee !important;
+}
+
+.colored-toast.swal2-icon-question {
+  background-color: #87adbd !important;
+}
+
+.colored-toast .swal2-title {
+  color: white;
+}
+
+.colored-toast .swal2-close {
+  color: white;
+}
+
+.colored-toast .swal2-html-container {
+  color: white;
+}
 </style>
