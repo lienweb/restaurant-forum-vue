@@ -37,6 +37,9 @@
 </template>
 
 <script>
+import authorizationAPI from '../apis/authorization'
+import { Toast } from '../utils/helpers'
+
 export default {
   data () {
     return {
@@ -45,16 +48,54 @@ export default {
     }
   },
   methods: {
-    handleSubmit () {
+    handleSubmit (e) {
       // 向後端伺服器驗證使用者資料
-      console.log(`email:[${this.email}]`)
-      console.log(`password:[${this.password}]`)
-      const data = JSON.stringify({
+      authorizationAPI.signIn({
         email: this.email,
         password: this.password
+      }).then(response => {
+        // 取得 API 請求後的資料
+        const { data } = response
+
+        // error handling: app層級的
+        if (data.status !== 'success') {
+          Toast.fire({
+            icon: 'error',
+            title: '未輸入帳號密碼，請重新輸入'
+          })
+          // throw new Error(data.message)
+          return
+        }
+
+        // 將 token 存放在 localStorage 內
+        localStorage.setItem('token', data.token)
+
+        // 轉址到landing page
+        this.$router.push('/restaurants')
+      }).catch(error => {
+        // http層級錯誤
+
+        // 將密碼欄位清空
+        this.password = ''
+        // 顯示錯誤提示
+        Toast.fire({
+          icon: 'error',
+          title: 'email或密碼輸入錯誤，請重新輸入'
+        })
+        console.log('error', error)
       })
-      console.log(data)
+
+      // console.log(`email:[${this.email}]`)
+      // console.log(`password:[${this.password}]`)
+      // const data = JSON.stringify({
+      //   email: this.email,
+      //   password: this.password
+      // })
+      // console.log(data)
     }
   }
 }
 </script>
+
+<style lang="scss" src="@/assets/scss/vendors/sweetalert2.scss" scoped>
+</style>

@@ -1,9 +1,10 @@
-import { apiHelper } from "../utils/helpers"  //get axios
+import { apiHelper } from '../utils/helpers' // get axios
 
 export default {
-  signIn({ email, password }) {
-    //axios.post()
-    apiHelper.post('/signin',{
+  signIn ({ email, password }) {
+    // axios.post()
+    // return一個Promise物件 axios
+    return apiHelper.post('/signin', {
       email, password
     })
   }
