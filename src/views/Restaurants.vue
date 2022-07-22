@@ -71,7 +71,7 @@ export default {
           page: queryPage,
           categoryId: queryCategoryId
         }) // return response
-        console.log(response)
+        // console.log(response)
 
         // // 除非自己輸入頁碼或關鍵字搜尋
         // if (!response.data.restaurants.length) {
