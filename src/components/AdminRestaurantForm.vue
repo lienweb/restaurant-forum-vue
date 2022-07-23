@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent.stop="handleSubmit">
+  <form @submit.prevent.stop="handleSubmit" v-show="!isLoading">
     <div class="form-group">
       <label for="name">Name</label>
       <input id="name" type="text" class="form-control" name="name" placeholder="Enter name" v-model="restaurant.name"
@@ -47,68 +47,22 @@
       <input id="image" type="file" name="image" accept="image/*" class="form-control-file" @change="handleFileChange">
     </div>
 
-    <button type="submit" class="btn btn-primary">
-      送出
+    <button type="submit" class="btn btn-primary" :disabled="isProcessing">
+      {{ isProcessing ? '處理中' : '送出' }}
     </button>
   </form>
 </template>
 
 <script>
-const dummyData = {
-  categories: [
-    {
-      id: 1,
-      name: '中式料理',
-      createdAt: '2022-07-07T09:45:55.000Z',
-      updatedAt: '2022-07-07T09:45:55.000Z'
-    },
-    {
-      id: 2,
-      name: '日本料理',
-      createdAt: '2022-07-07T09:45:55.000Z',
-      updatedAt: '2022-07-07T09:45:55.000Z'
-    },
-    {
-      id: 3,
-      name: '義大利料理',
-      createdAt: '2022-07-07T09:45:55.000Z',
-      updatedAt: '2022-07-07T09:45:55.000Z'
-    },
-    {
-      id: 4,
-      name: '墨西哥料理',
-      createdAt: '2022-07-07T09:45:55.000Z',
-      updatedAt: '2022-07-07T09:45:55.000Z'
-    },
-    {
-      id: 5,
-      name: '素食料理',
-      createdAt: '2022-07-07T09:45:55.000Z',
-      updatedAt: '2022-07-07T09:45:55.000Z'
-    },
-    {
-      id: 6,
-      name: '美式料理',
-      createdAt: '2022-07-07T09:45:55.000Z',
-      updatedAt: '2022-07-07T09:45:55.000Z'
-    },
-    {
-      id: 7,
-      name: '複合式料理',
-      createdAt: '2022-07-07T09:45:55.000Z',
-      updatedAt: '2022-07-07T09:45:55.000Z'
-    }
-  ]
-}
+import adminAPI from '../apis/admin'
+import { Toast } from '../utils/helpers'
 
 export default {
   props: {
     initialRestaurant: {
       type: Object,
       // 當資料不是必填時，用 default 設定一組預設值
-      // Object or array defaults must be returned from
-      // a factory function -- see props validation
-      default: () => { // this is functionin js
+      default: () => { // this is function in js
         return {
           name: '',
           categoryId: -1,
@@ -119,17 +73,10 @@ export default {
           openingHours: ''
         }
       }
-
-      // arrow function: return object literal
-      // default: () => ({  //return object
-      //   name: '',
-      //   categoryId: '',
-      //   tel: '',
-      //   address: '',
-      //   description: '',
-      //   image: '',
-      //   openingHours: '',
-      // })
+    },
+    isProcessing: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -144,12 +91,25 @@ export default {
         openingHours: '',
         description: '',
         image: ''
-      }
+      },
+      isLoading: true
     }
   },
   methods: {
-    fetchCategories () {
-      this.categories = dummyData.categories
+    async fetchCategories () {
+      try {
+        const { data } = await adminAPI.categories.get()
+
+        this.categories = data.categories
+        this.isLoading = false // show form until fetch categories
+      } catch (error) {
+        console.log(error)
+        this.isLoading = false
+        Toast.fire({
+          icon: 'error',
+          title: '表單無法取得餐廳類別資料，請稍後再試'
+        })
+      }
     },
     fetchInitialRestaurant () {
       this.restaurant = {
@@ -170,6 +130,19 @@ export default {
       }
     },
     handleSubmit (e) {
+      if (!this.restaurant.name) {
+        Toast.fire({
+          icon: 'warning',
+          title: '請填寫餐廳名稱'
+        })
+        return
+      } else if (!this.restaurant.categoryId) {
+        Toast.fire({
+          icon: 'warning',
+          title: '請選擇餐廳類別'
+        })
+        return
+      }
       const form = e.target // <form></form>
       const formData = new FormData(form)
 
