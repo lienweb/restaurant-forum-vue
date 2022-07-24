@@ -8,6 +8,21 @@ export default {
       return apiHelper.get('/admin/categories', {
         headers: { Authorization: `Bearer ${getToken()}` }
       })
+    },
+    create ({ name }) { // 屬性與物件同名簡寫
+      return apiHelper.post('/admin/categories', { name }, {
+        headers: { Authorization: `Bearer ${getToken()}` }
+      })
+    },
+    update ({ categoryId, formData }) {
+      return apiHelper.put(`/admin/categories/${categoryId}`, formData, {
+        headers: { Authorization: `Bearer ${getToken()}` }
+      })
+    },
+    delete ({ categoryId }) {
+      return apiHelper.delete(`/admin/categories/${categoryId}`, {
+        headers: { Authorization: `Bearer ${getToken()}` }
+      })
     }
   },
   restaurants: {
