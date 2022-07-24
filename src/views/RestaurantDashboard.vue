@@ -21,83 +21,8 @@
 </template>
 
 <script>
-const dummyData = {
-  restaurant: {
-    id: 1,
-    name: 'Remington Shields',
-    tel: '(664) 474-5747 x14320',
-    address: '9340 Cornell Field',
-    opening_hours: '08:00',
-    description: 'Et beatae molestiae optio quaerat dolores autem.\nDolorem et iste.',
-    image: 'https://loremflickr.com/320/240/restaurant,food/?random=14.732919933876175',
-    viewCounts: 1,
-    createdAt: '2022-07-07T09:45:55.000Z',
-    updatedAt: '2022-07-09T15:27:59.000Z',
-    CategoryId: 2,
-    Category: {
-      id: 2,
-      name: '日本料理',
-      createdAt: '2022-07-07T09:45:55.000Z',
-      updatedAt: '2022-07-07T09:45:55.000Z'
-    },
-    Comments: [
-      {
-        id: 1,
-        text: 'Architecto molestiae illum.',
-        UserId: 2,
-        RestaurantId: 1,
-        createdAt: '2022-07-07T09:45:55.000Z',
-        updatedAt: '2022-07-07T09:45:55.000Z',
-        User: {
-          id: 2,
-          name: 'user1',
-          email: 'user1@example.com',
-          password: '$2a$10$SJp6xLGGUfwp4xZyow1x9eZMPicZcccBu7SkC5syFab6J/1HQ7UXS',
-          isAdmin: false,
-          image: null,
-          createdAt: '2022-07-07T09:45:55.000Z',
-          updatedAt: '2022-07-07T09:45:55.000Z'
-        }
-      },
-      {
-        id: 51,
-        text: 'Vel dolores veniam voluptas adipisci nihil placeat voluptates perspiciatis rerum.',
-        UserId: 2,
-        RestaurantId: 1,
-        createdAt: '2022-07-07T09:45:55.000Z',
-        updatedAt: '2022-07-07T09:45:55.000Z',
-        User: {
-          id: 2,
-          name: 'user1',
-          email: 'user1@example.com',
-          password: '$2a$10$SJp6xLGGUfwp4xZyow1x9eZMPicZcccBu7SkC5syFab6J/1HQ7UXS',
-          isAdmin: false,
-          image: null,
-          createdAt: '2022-07-07T09:45:55.000Z',
-          updatedAt: '2022-07-07T09:45:55.000Z'
-        }
-      },
-      {
-        id: 101,
-        text: 'Quasi nesciunt quasi rerum et fugit deleniti et laboriosam eligendi.',
-        UserId: 3,
-        RestaurantId: 1,
-        createdAt: '2022-07-07T09:45:55.000Z',
-        updatedAt: '2022-07-07T09:45:55.000Z',
-        User: {
-          id: 3,
-          name: 'user2',
-          email: 'user2@example.com',
-          password: '$2a$10$AO.O77pnpFTWGbvBvEK/OOBaAxA93X9AlBk7NZOYyck0IRcooLudm',
-          isAdmin: false,
-          image: null,
-          createdAt: '2022-07-07T09:45:55.000Z',
-          updatedAt: '2022-07-07T09:45:55.000Z'
-        }
-      }
-    ]
-  }
-}
+import restaurantsAPI from '../apis/restaurants'
+import { Toast } from '../utils/helpers'
 
 export default {
   data () {
@@ -112,14 +37,27 @@ export default {
     }
   },
   methods: {
-    fetchTopRestaurant () {
-      const { id, name, viewCounts, Category, Comments } = dummyData.restaurant
-      this.topRestaurant = {
-        id,
-        name,
-        categoryName: Category.name ? Category.name : '未分類',
-        commentsLength: Comments.length,
-        viewCounts
+    async fetchTopRestaurant () {
+      try {
+        const { id: restaurantId } = this.$route.params
+        const { data } = await restaurantsAPI.getRestaurantDashboard(restaurantId)
+        if (data.restaurant === null) {
+          throw new Error('restaurant not found')
+        }
+        const { id, name, viewCounts, Category, Comments } = data.restaurant
+        this.topRestaurant = {
+          id,
+          name,
+          categoryName: Category.name ? Category.name : '未分類',
+          commentsLength: Comments.length,
+          viewCounts
+        }
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '找不到該餐廳，請稍後再試'
+        })
       }
     }
   },
