@@ -31,48 +31,11 @@
 </template>
 
 <script>
-// eslint disable
-// seed data:模擬API傳入資料
-const dummyUser = {
-  currentUser: {
-    id: 1,
-    name: '管理者',
-    email: 'root@example.com',
-    image: 'https://i.pravatar.cc/300',
-    isAdmin: true
-  },
-  isAuthenticated: true
-}
+import { mapState } from 'vuex'
 
 export default {
-  // Vue 會在沒有資料時使用此預設值
-  data () {
-    return {
-      currentUser: {
-        id: -1,
-        name: '',
-        email: '',
-        image: '',
-        isAdmin: false
-      },
-      isAuthenticated: false
-    }
-  },
-  created () {
-    this.fetchUser()
-  },
-  methods: {
-    /**
-     * 會向API拉取資料
-     */
-    fetchUser () {
-      this.currentUser = {
-        // 少了最外層的物件：因為若屬性相同，後面會蓋掉前面
-        ...this.currentUser, // default
-        ...dummyUser.currentUser // API拉取資料後
-      }
-      this.isAuthenticated = dummyUser.isAuthenticated
-    }
+  computed: {
+    ...mapState(['currentUser', 'isAuthenticated'])
   }
 }
 </script>
