@@ -14,12 +14,12 @@ export default {
         headers: { Authorization: `Bearer ${getToken()}` }
       })
     },
-    update ({ categoryId, formData }) {
-      return apiHelper.put(`/admin/categories/${categoryId}`, formData, {
+    update ({ categoryId, name }) {
+      return apiHelper.put(`/admin/categories/${categoryId}`, { name }, {
         headers: { Authorization: `Bearer ${getToken()}` }
       })
     },
-    delete ({ categoryId }) {
+    delete (categoryId) {
       return apiHelper.delete(`/admin/categories/${categoryId}`, {
         headers: { Authorization: `Bearer ${getToken()}` }
       })

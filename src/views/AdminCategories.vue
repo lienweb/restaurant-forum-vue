@@ -48,7 +48,7 @@
               Edit
             </button>
             <button type="button" class="btn btn-link me-2" v-show="category.isEditing"
-              @click.stop.prevent="updateCategory(category.id)">
+              @click.stop.prevent="updateCategory({ categoryId: category.id, name: category.name })">
               Save
             </button>
             <button type="button" class="btn btn-link me-2" @click.stop.prevent="deleteCategory(category.id)">
@@ -129,10 +129,25 @@ export default {
         })
       }
     },
-    deleteCategory (categoryId) {
-      // TODO: 透過 API 告知伺服器欲刪除的餐廳類別
-      // 將該餐廳類別從陣列中移除
-      this.categories = this.categories.filter(category => category.id !== categoryId)
+    async deleteCategory (categoryId) {
+      try {
+        const { data } = await adminAPI.categories.delete(categoryId)
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+        // 將該餐廳類別從陣列中移除
+        this.categories = this.categories.filter(category => category.id !== categoryId)
+        Toast.fire({
+          icon: 'success',
+          title: '成功刪除該餐廳類別'
+        })
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '無法刪除餐廳類別，請稍後再試'
+        })
+      }
     },
     toggleIsEditing (categoryId) {
       this.categories = this.categories.map(category => {
@@ -143,10 +158,20 @@ export default {
         } : category
       })
     },
-    updateCategory (categoryId) {
-      // TODO: 透過API像伺服器更新類別
-      // press save, flag turn off
-      this.toggleIsEditing(categoryId)
+    async updateCategory ({ categoryId, name }) {
+      try {
+        const { data } = await adminAPI.categories.update({ categoryId, name })
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+        // press save, flag turn off
+        this.toggleIsEditing(categoryId)
+      } catch (error) {
+        Toast.fire({
+          icon: 'error',
+          title: '無法編輯餐廳類別，請稍後再試'
+        })
+      }
     },
     handleCancel (categoryId) {
       // use name cache
