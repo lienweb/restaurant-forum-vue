@@ -8,7 +8,7 @@
             @enter.prevent.stop="createCategory">
         </div>
         <div class="col-auto">
-          <button type="button" class="btn btn-primary" @click.prevent.stop="createCategory">
+          <button type="button" class="btn btn-primary" :disabled="isProcessing" @click.prevent.stop="createCategory">
             新增
           </button>
         </div>
@@ -73,7 +73,8 @@ export default {
   data () {
     return {
       categories: [],
-      newCategory: ''
+      newCategory: '',
+      isProcessing: false
     }
   },
   created () {
@@ -107,6 +108,7 @@ export default {
           })
           return
         }
+        this.isProcessing = true
         const { data } = await adminAPI.categories.create({ name: this.newCategory })
         if (data.status === 'error') {
           throw new Error(data.message)
@@ -119,9 +121,11 @@ export default {
           isEditing: false,
           nameCached: ''
         })
+        this.isProcessing = false
         this.newCategory = ''
       } catch (error) {
         console.log(error)
+        this.isProcessing = false
         this.newCategory = ''
         Toast.fire({
           icon: 'error',
