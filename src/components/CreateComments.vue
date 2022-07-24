@@ -6,15 +6,16 @@
     </div>
     <div class="d-flex align-items-center justify-content-between">
       <button type="button" class="btn btn-link" @click="$router.back()">回上一頁</button>
-      <button type="submit" class="btn btn-primary me-0">
-        Submit
+      <button type="submit" class="btn btn-primary me-0" :disabled="isProcessing">
+        {{ isProcessing ? '提交中' : 'Submit' }}
       </button>
     </div>
   </form>
 </template>
 
 <script>
-import { v4 as uuidv4 } from 'uuid'
+import commentsAPI from '../apis/comments'
+import { Toast } from '../utils/helpers'
 
 export default {
   name: 'CreateComments',
@@ -26,19 +27,47 @@ export default {
   },
   data () {
     return {
-      text: ''
+      text: '',
+      isProcessing: false
     }
   },
   methods: {
-    handleSubmit () {
-      // TODO: 透過API向伺服器請求發POST新增一筆comment
-      // 伺服器新增 Comment 成功後...
-      this.$emit('after-create-comment', {
-        commentId: uuidv4(), // 尚未串接 API 暫時使用隨機的 id
-        restaurantId: this.restaurantId,
-        text: this.text
-      })
-      this.text = '' // 將表單內的資料清空
+    async handleSubmit () {
+      // 透過API向伺服器請求發POST新增一筆comment
+      try {
+        if (!this.text.trim()) {
+          Toast.fire({
+            icon: 'warning',
+            title: '您尚未填寫任何評論'
+          })
+          return
+        }
+
+        this.isProcessing = true
+        const { data } = await commentsAPI.create({
+          restaurantId: this.restaurantId,
+          text: this.text.trim()
+        })
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+
+        // 伺服器新增 Comment 成功後...
+        this.$emit('after-create-comment', {
+          commentId: data.commentId,
+          restaurantId: this.restaurantId,
+          text: this.text
+        })
+        this.text = '' // 將表單內的資料清空
+        this.isProcessing = false
+      } catch (error) {
+        this.isProcessing = false
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '無法新增評論，請稍後再試'
+        })
+      }
     }
   }
 }

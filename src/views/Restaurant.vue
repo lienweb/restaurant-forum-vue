@@ -92,7 +92,7 @@ export default {
         text,
         createdAt: new Date()
       })
-      console.log(payload)
+      // console.log(payload)
     }
   },
   computed: {

@@ -25,17 +25,9 @@
 
 <script>
 import { fromNowFilter } from '../utils/mixins.js'
-
-const dummyUser = {
-  currentUser: {
-    id: 1,
-    name: '管理者',
-    email: 'root@example.com',
-    image: 'https://i.pravatar.cc/300',
-    isAdmin: true
-  },
-  isAuthenticated: true
-}
+import commentsAPI from '../apis/comments'
+import { mapState } from 'vuex'
+import { Toast } from '../utils/helpers.js'
 
 export default {
   name: 'RestaurantComments',
@@ -46,15 +38,31 @@ export default {
     }
   },
   mixins: [fromNowFilter],
-  data () {
-    return {
-      currentUser: dummyUser.currentUser
+  methods: {
+    async handDeleteButtonClick (commentId) {
+      try {
+        const { data } = await commentsAPI.delete(commentId)
+        // data: status, message, RestaurantId
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+
+        this.$emit('after-delete-comment', commentId)
+        Toast.fire({
+          icon: 'success',
+          title: '成功刪除該評論'
+        })
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '無法刪除評論，請稍後再重試'
+        })
+      }
     }
   },
-  methods: {
-    handDeleteButtonClick (commentId) {
-      this.$emit('after-delete-comment', commentId)
-    }
+  computed: {
+    ...mapState(['currentUser'])
   }
 }
 </script>
