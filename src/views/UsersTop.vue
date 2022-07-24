@@ -10,7 +10,7 @@
           <img :src="user.image" width="140px" height="140px">
         </router-link>
         <h2>{{ user.name }}</h2>
-        <span class="badge bg-secondary">追蹤人數：{{ user.FollowerCount }}</span>
+        <span class="badge bg-secondary">追蹤人數：{{ user.followerCount }}</span>
         <p class="mt-3">
           <button type="button" class="btn btn-danger" v-if="user.isFollowed" @click="unfollowUser(user.id)">
             取消追蹤
