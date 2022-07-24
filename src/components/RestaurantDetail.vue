@@ -85,6 +85,14 @@ export default {
         isLiked: false
       }
     }
+  },
+  watch: {
+    initialRestaurantDetail (newValue) {
+      this.restaurantDetail = {
+        ...this.restaurantDetail,
+        ...newValue
+      }
+    }
   }
 }
 </script>

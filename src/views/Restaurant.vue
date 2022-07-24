@@ -10,103 +10,12 @@
 </template>
 
 <script>
-/* eslint-disable */
 import RestaurantDetail from '../components/RestaurantDetail.vue'
 import RestaurantComments from '../components/RestaurantComments.vue'
 import CreateComments from '../components/CreateComments.vue'
-
-const dummyData = {
-  "restaurant": {
-    "id": 1,
-    "name": "Remington Shields",
-    "tel": "(664) 474-5747 x14320",
-    "address": "9340 Cornell Field",
-    "opening_hours": "08:00",
-    "description": "Et beatae molestiae optio quaerat dolores autem.\nDolorem et iste.",
-    "image": "https://loremflickr.com/320/240/restaurant,food/?random=14.732919933876175",
-    "viewCounts": 1,
-    "createdAt": "2022-07-07T09:45:55.000Z",
-    "updatedAt": "2022-07-09T15:27:59.096Z",
-    "CategoryId": 2,
-    "Category": {
-      "id": 2,
-      "name": "日本料理",
-      "createdAt": "2022-07-07T09:45:55.000Z",
-      "updatedAt": "2022-07-07T09:45:55.000Z"
-    },
-    "FavoritedUsers": [],
-    "LikedUsers": [],
-    "Comments": [
-      {
-        "id": 101,
-        "text": "Quasi nesciunt quasi rerum et fugit deleniti et laboriosam eligendi.",
-        "UserId": 3,
-        "RestaurantId": 1,
-        "createdAt": "2022-07-07T09:45:55.000Z",
-        "updatedAt": "2022-07-07T09:45:55.000Z",
-        "User": {
-          "id": 3,
-          "name": "user2",
-          "email": "user2@example.com",
-          "password": "$2a$10$AO.O77pnpFTWGbvBvEK/OOBaAxA93X9AlBk7NZOYyck0IRcooLudm",
-          "isAdmin": false,
-          "image": null,
-          "createdAt": "2022-07-07T09:45:55.000Z",
-          "updatedAt": "2022-07-07T09:45:55.000Z"
-        }
-      },
-      {
-        "id": 51,
-        "text": "Vel dolores veniam voluptas adipisci nihil placeat voluptates perspiciatis rerum.",
-        "UserId": 2,
-        "RestaurantId": 1,
-        "createdAt": "2022-07-07T09:45:55.000Z",
-        "updatedAt": "2022-07-07T09:45:55.000Z",
-        "User": {
-          "id": 2,
-          "name": "user1",
-          "email": "user1@example.com",
-          "password": "$2a$10$SJp6xLGGUfwp4xZyow1x9eZMPicZcccBu7SkC5syFab6J/1HQ7UXS",
-          "isAdmin": false,
-          "image": null,
-          "createdAt": "2022-07-07T09:45:55.000Z",
-          "updatedAt": "2022-07-07T09:45:55.000Z"
-        }
-      },
-      {
-        "id": 1,
-        "text": "Architecto molestiae illum.",
-        "UserId": 2,
-        "RestaurantId": 1,
-        "createdAt": "2022-07-07T09:45:55.000Z",
-        "updatedAt": "2022-07-07T09:45:55.000Z",
-        "User": {
-          "id": 2,
-          "name": "user1",
-          "email": "user1@example.com",
-          "password": "$2a$10$SJp6xLGGUfwp4xZyow1x9eZMPicZcccBu7SkC5syFab6J/1HQ7UXS",
-          "isAdmin": false,
-          "image": null,
-          "createdAt": "2022-07-07T09:45:55.000Z",
-          "updatedAt": "2022-07-07T09:45:55.000Z"
-        }
-      }
-    ]
-  },
-  "isFavorited": false,
-  "isLiked": false
-}
-
-const dummyUser = {
-  currentUser: {
-    id: 1,
-    name: '管理者',
-    email: 'root@example.com',
-    image: 'https://i.pravatar.cc/300',
-    isAdmin: true
-  },
-  isAuthenticated: true
-}
+import restaurantsAPI from '../apis/restaurants'
+import { Toast } from '../utils/helpers'
+import { mapState } from 'vuex'
 
 export default {
   name: 'Restaurant',
@@ -115,7 +24,7 @@ export default {
     RestaurantComments,
     CreateComments
   },
-  data() {
+  data () {
     return {
       restaurant: {
         id: -1,
@@ -129,56 +38,48 @@ export default {
         isFavorited: false,
         isLiked: false
       },
-      restaurantComments: [],
-      // id: this.$route.params.id
-      currentUser: dummyUser.currentUser
+      restaurantComments: []
     }
   },
   methods: {
-    // fetchRestaurant(id) {
-    //   this.restaurant = dummyData.restaurant
-    // }
-    fetchRestaurant(restaurantId) {
-      console.log('fetchRestaurant id: ', restaurantId)
+    async fetchRestaurant (restaurantId) {
+      try {
+        const { data } = await restaurantsAPI.getRestaurantDetail(restaurantId)
+        if (data.status === 'error') {
+          throw new Error(data.message)
+        }
+        const {
+          restaurant: { id, name, Category, image, opening_hours: openingHours, tel, address, description, Comments: comments },
+          isFavorited,
+          isLiked
+        } = data
 
-      // 解構dummyData
-      const { restaurant, isFavorited, isLiked } = dummyData
-      const {
-        id, name, Category, image, opening_hours, tel, address, description
-      } = restaurant
+        this.restaurant = {
+          id,
+          name,
+          categoryName: Category.name ? Category.name : '未分類',
+          image,
+          openingHours,
+          tel,
+          address,
+          description,
+          isFavorited,
+          isLiked
+        }
 
-      this.restaurant = {
-        id,
-        name,
-        categoryName: Category.name ? Category.name : '未分類',
-        image,
-        openingHours: opening_hours,
-        tel,
-        address,
-        description,
-        isFavorited,
-        isLiked
+        this.restaurantComments = comments
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '無法取得該餐廳資料，請稍後再試'
+        })
       }
-
-      // this.restaurant = {
-      //   id: dummyData.restaurant.id,
-      //   name: dummyData.restaurant.name,
-      //   categoryName: dummyData.restaurant.Category.name,
-      //   image: dummyData.restaurant.image,
-      //   openingHours: dummyData.restaurant.opening_hours,
-      //   tel: dummyData.restaurant.tel,
-      //   address: dummyData.restaurant.address,
-      //   description: dummyData.restaurant.description,
-      //   isFavorited: dummyData.isFavorited,
-      //   isLiked: dummyData.isLiked,
-      // }
-
-      this.restaurantComments = dummyData.restaurant.Comments
     },
-    afterDeleteComment(commentId) {
+    afterDeleteComment (commentId) {
       this.restaurantComments = this.restaurantComments.filter(comment => comment.id !== commentId)
     },
-    afterCreateComment(payload) {
+    afterCreateComment (payload) {
       const { commentId, restaurantId, text } = payload
 
       this.restaurantComments.push({
@@ -191,12 +92,20 @@ export default {
         text,
         createdAt: new Date()
       })
-      console.log(payload);
+      console.log(payload)
     }
   },
-  created() {
+  computed: {
+    ...mapState(['currentUser'])
+  },
+  created () {
     const { id: restaurantId } = this.$route.params
     this.fetchRestaurant(restaurantId)
+  },
+  beforeRouteUpdate (to, from, next) {
+    const { id } = to.params
+    this.fetchRestaurant(id)
+    next()
   }
 }
 </script>
