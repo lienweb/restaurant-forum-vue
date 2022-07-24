@@ -20,13 +20,13 @@ export default {
     }
   },
   methods: {
-    async handleAfterSubmit (form) {
+    async handleAfterSubmit (formData) {
       try {
-        for (const [name, value] of form.entries()) {
+        for (const [name, value] of formData.entries()) {
           console.log(name + ': ' + value)
         }
         this.isProcessing = true
-        const { data } = await adminAPI.restaurants.create({ form })
+        const { data } = await adminAPI.restaurants.create({ formData })
         if (data.status !== 'success') {
           throw new Error(data.message)
         }

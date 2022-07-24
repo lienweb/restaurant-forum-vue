@@ -152,6 +152,15 @@ export default {
   created () {
     this.fetchCategories()
     this.fetchInitialRestaurant()
+  },
+  watch: {
+    // 因initialRestaurant後來的更新不會被偵測，故設定
+    initialRestaurant (newValue) {
+      this.restaurant = {
+        ...this.restaurant, // ˊ避免沒有資料傳遞給的預設值
+        ...newValue
+      }
+    }
   }
 }
 </script>
