@@ -31,5 +31,13 @@ export default {
     update ({ formData, restaurantId }) {
       return apiHelper.put(`/admin/restaurants/${restaurantId}`, formData)
     }
+  },
+  users: {
+    get () {
+      return apiHelper.get('/admin/users/')
+    },
+    update ({ userId, isAdmin }) {
+      return apiHelper.put(`/admin/users/${userId}`, { isAdmin })
+    }
   }
 }
