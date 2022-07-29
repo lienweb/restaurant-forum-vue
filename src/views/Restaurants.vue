@@ -4,12 +4,14 @@
     <NavPills :categories="categories" />
     <!-- 餐廳類別標籤 RestaurantsNavPills -->
 
-    <Spinner v-if="isLoading"/>
+    <Spinner v-if="isLoading" />
     <template v-else>
       <div class="row mt-5">
         <!-- 餐廳卡片 RestaurantCard-->
         <RestaurantCards v-for="restaurant in restaurants" :key="restaurant.id" :initial-restaurant="restaurant" />
         <!-- :restaurantsList="" -->
+        <div v-if="restaurants.length < 1">此餐廳類別目前無資料</div>
+
         <!-- 分頁標籤 RestaurantPagination -->
       </div>
       <RestaurantsPaginationVue v-if="totalPage.length > 1" :current-page="currentPage" :total-page="totalPage"
