@@ -29,7 +29,7 @@
           <td>{{ user.isAdmin ? 'Admin' : 'User' }}</td>
           <td>
             <button type="button" class="btn btn-link" v-show="!user.isAdmin"
-              @click.prevent.stop="toggleUserRole(user.id)">
+              @click.prevent.stop="toggleUserRole(user.id, user.isAdmin)">
               set as admin
             </button>
             <button type="button" class="btn btn-link" v-show="user.isAdmin" v-if="currentUser.id !== user.id"
@@ -81,7 +81,8 @@ export default {
     },
     async toggleUserRole (userId, isAdmin) {
       try {
-        const { data, statusText } = await adminAPI.users.update({ userId, isAdmin: !isAdmin.toString() })
+        const isAdminStr = (!isAdmin).toString()
+        const { data, statusText } = await adminAPI.users.update({ userId, isAdmin: isAdminStr })
         if (statusText !== 'OK' || data.status !== 'success') {
           throw new Error(statusText)
         }

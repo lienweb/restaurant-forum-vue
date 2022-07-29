@@ -2,7 +2,7 @@
   <div class="container py-5">
     <NavTabs />
     <Spinner v-if="isLoading" />
-    <template>
+    <template v-else>
       <h1 class="mt-5">美食達人</h1>
       <hr>
       <div class="row text-center">
