@@ -1,30 +1,37 @@
 <template>
   <div class="container py-5">
-    <div>
-      <h1>{{ topRestaurant.name }}</h1>
-      <span class="badge bg-secondary mt-1 mb-3">
-        {{ topRestaurant.categoryName }}
-      </span>
-    </div>
+    <Spinner v-if="isLoading" />
+    <template v-else>
+      <div>
+        <h1>{{ topRestaurant.name }}</h1>
+        <span class="badge bg-secondary mt-1 mb-3">
+          {{ topRestaurant.categoryName }}
+        </span>
+      </div>
 
-    <hr>
+      <hr>
 
-    <ul>
-      <li>評論數： {{ topRestaurant.commentsLength }}</li>
-      <li>瀏覽次數： {{ topRestaurant.viewCounts }}</li>
-    </ul>
+      <ul>
+        <li>評論數： {{ topRestaurant.commentsLength }}</li>
+        <li>瀏覽次數： {{ topRestaurant.viewCounts }}</li>
+      </ul>
 
-    <button type="button" class="btn btn-link" @click="$router.back()">
-      回上一頁
-    </button>
+      <button type="button" class="btn btn-link" @click="$router.back()">
+        回上一頁
+      </button>
+    </template>
   </div>
 </template>
 
 <script>
 import restaurantsAPI from '../apis/restaurants'
 import { Toast } from '../utils/helpers'
+import Spinner from '../components/Spinner.vue'
 
 export default {
+  components: {
+    Spinner
+  },
   data () {
     return {
       topRestaurant: {

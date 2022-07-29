@@ -4,14 +4,17 @@
     <NavPills :categories="categories" />
     <!-- 餐廳類別標籤 RestaurantsNavPills -->
 
-    <div class="row mt-5">
-      <!-- 餐廳卡片 RestaurantCard-->
-      <RestaurantCards v-for="restaurant in restaurants" :key="restaurant.id" :initial-restaurant="restaurant" />
-      <!-- :restaurantsList="" -->
-      <!-- 分頁標籤 RestaurantPagination -->
-    </div>
-    <RestaurantsPaginationVue v-if="totalPage.length > 1" :current-page="currentPage" :total-page="totalPage"
-      :category-id="categoryId" :previous-page="previousPage" :next-page="nextPage" />
+    <Spinner v-if="isLoading"/>
+    <template v-else>
+      <div class="row mt-5">
+        <!-- 餐廳卡片 RestaurantCard-->
+        <RestaurantCards v-for="restaurant in restaurants" :key="restaurant.id" :initial-restaurant="restaurant" />
+        <!-- :restaurantsList="" -->
+        <!-- 分頁標籤 RestaurantPagination -->
+      </div>
+      <RestaurantsPaginationVue v-if="totalPage.length > 1" :current-page="currentPage" :total-page="totalPage"
+        :category-id="categoryId" :previous-page="previousPage" :next-page="nextPage" />
+    </template>
   </div>
 </template>
 
@@ -22,6 +25,7 @@ import RestaurantCards from '../components/RestaurantCards.vue'
 import RestaurantsPaginationVue from '../components/RestaurantsPagination.vue'
 import restaurantsAPI from '../apis/restaurants'
 import { Toast } from '../utils/helpers'
+import Spinner from '../components/Spinner.vue'
 
 export default {
   name: 'Restaurants',
@@ -29,7 +33,8 @@ export default {
     NavTabs,
     NavPills,
     RestaurantCards,
-    RestaurantsPaginationVue
+    RestaurantsPaginationVue,
+    Spinner
   },
   data () {
     return {
@@ -39,7 +44,8 @@ export default {
       currentPage: 1,
       totalPage: [],
       previousPage: -1,
-      nextPage: -1
+      nextPage: -1,
+      isLoading: true
     }
   },
   created () {
@@ -100,7 +106,9 @@ export default {
         this.totalPage = totalPage
         this.previousPage = prev
         this.nextPage = next
+        this.isLoading = false
       } catch (error) {
+        this.isLoading = false
         Toast.fire({
           icon: 'error',
           title: '無法取得餐廳資料，請稍後再重試'
