@@ -106,7 +106,7 @@ export default {
   },
   beforeRouteUpdate(to, from, next) {
     const { id } = to.params
-    this.fetchUserProfile()
+    this.fetchUserProfile(id)
     next()
   },
   computed: {
