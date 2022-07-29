@@ -7,6 +7,9 @@ export default {
   get ({ userId }) {
     return apiHelper.get(`/users/${userId}`)
   },
+  update ({ userId, formData }) {
+    return apiHelper.put(`/users/${userId}`, formData)
+  },
   addFavoriteRest (restaurantId) {
     return apiHelper.post(`/favorite/${restaurantId}`, null)
   },
