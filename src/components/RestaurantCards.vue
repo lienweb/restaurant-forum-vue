@@ -18,19 +18,20 @@
         </p>
       </div>
       <div class="card-footer">
-        <button type="button" class="btn btn-danger btn-border favorite me-2" v-if="restaurant.isFavorited"
-          @click.stop.prevent="deleteFavorite(restaurant.id)">
+        <button type="button" class="btn btn-danger btn-border favorite me-2" :disabled="isProcessing"
+          v-if="restaurant.isFavorited" @click.stop.prevent="deleteFavorite(restaurant.id)">
           移除最愛
         </button>
-        <button type="button" class="btn btn-primary btn-border favorite me-2" v-else
+        <button type="button" class="btn btn-primary btn-border favorite me-2" v-else :disabled="isProcessing"
           @click.stop.prevent="addFavorite(restaurant.id)">
           加到最愛
         </button>
-        <button type="button" class="btn btn-danger like me-2" v-if="restaurant.isLiked"
+        <button type="button" class="btn btn-danger like me-2" v-if="restaurant.isLiked" :disabled="isProcessing"
           @click.stop.prevent="deleteFromLike(restaurant.id)">
           Unlike
         </button>
-        <button type="button" class="btn btn-primary like me-2" v-else @click.stop.prevent="addToLike(restaurant.id)">
+        <button type="button" class="btn btn-primary like me-2" v-else :disabled="isProcessing"
+          @click.stop.prevent="addToLike(restaurant.id)">
           Like
         </button>
       </div>
@@ -59,6 +60,7 @@ export default {
   methods: {
     async addFavorite (restaurantId) {
       try {
+        this.isProcessing = true
         const { data } = await usersAPI.addFavoriteRest(restaurantId)
         // console.log(data)
 
@@ -71,7 +73,9 @@ export default {
           ...this.restaurant, // 保留餐廳內原有資料
           isFavorited: true
         }
+        this.isProcessing = false
       } catch (error) {
+        this.isProcessing = false
         Toast.fire({
           icon: 'error',
           title: '無法將餐廳加入我的最愛，請稍後再重試'
@@ -81,6 +85,7 @@ export default {
     },
     async deleteFavorite (restaurantId) {
       try {
+        this.isProcessing = true
         const { data } = await usersAPI.deleteFavoriteRest(restaurantId)
 
         // STEP 4: 若請求過程有錯，則進到錯誤處理
@@ -92,7 +97,9 @@ export default {
           ...this.restaurant, // 保留餐廳內原有資料
           isFavorited: false
         }
+        this.isProcessing = false
       } catch (error) {
+        this.isProcessing = false
         Toast.fire({
           icon: 'error',
           title: '無法將餐廳從我的最愛刪除，請稍後再重試'
@@ -102,6 +109,7 @@ export default {
     },
     async addToLike (restaurantId) {
       try {
+        this.isProcessing = true
         const { data } = await usersAPI.addRestLike(restaurantId)
 
         if (data.status !== 'success') {
@@ -112,7 +120,9 @@ export default {
           ...this.restaurant, // 保留餐廳內原有資料
           isLiked: true
         }
+        this.isProcessing = false
       } catch (error) {
+        this.isProcessing = false
         Toast.fire({
           icon: 'error',
           title: '無法對餐廳按讚，請稍後再重試'
@@ -122,6 +132,7 @@ export default {
     },
     async deleteFromLike (restaurantId) {
       try {
+        this.isProcessing = true
         const { data } = await usersAPI.deleteRestLike(restaurantId)
 
         if (data.status !== 'success') {
@@ -132,7 +143,9 @@ export default {
           ...this.restaurant, // 保留餐廳內原有資料
           isLiked: false
         }
+        this.isProcessing = false
       } catch (error) {
+        this.isProcessing = false
         Toast.fire({
           icon: 'error',
           title: '無法對餐廳取消讚，請稍後再重試'
