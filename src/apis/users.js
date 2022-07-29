@@ -1,51 +1,31 @@
 import { apiHelper } from '../utils/helpers'
 
-const getToken = () => localStorage.getItem('token')
-
 export default {
   getCurrentUser () {
-    return apiHelper.get('/get_current_user', {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.get('/get_current_user')
   },
   get ({ userId }) {
-    return apiHelper.get(`/users/${userId}`, {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.get(`/users/${userId}`)
   },
   addFavoriteRest (restaurantId) {
-    return apiHelper.post(`/favorite/${restaurantId}`, null, {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.post(`/favorite/${restaurantId}`, null)
   },
   deleteFavoriteRest (restaurantId) {
-    return apiHelper.delete(`/favorite/${restaurantId}`, {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.delete(`/favorite/${restaurantId}`)
   },
   addRestLike (restaurantId) {
-    return apiHelper.post(`/like/${restaurantId}`, null, {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.post(`/like/${restaurantId}`)
   },
   deleteRestLike (restaurantId) {
-    return apiHelper.delete(`/like/${restaurantId}`, {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.delete(`/like/${restaurantId}`)
   },
   getTopUsers () {
-    return apiHelper.get('/users/top', {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.get('/users/top')
   },
   addUserFollowing (userId) {
-    return apiHelper.post(`/following/${userId}`, null, {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.post(`/following/${userId}`, null)
   },
   deleteUserFollowing (userId) {
-    return apiHelper.delete(`/following/${userId}`, {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.delete(`/following/${userId}`)
   }
 }
